@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weweb.po.mapper.PoVendorDao">
+    <sql id="poVendorColumns">
+        vendorid,
+        name,
+        countryCode,
+        stateCode,
+        city,
+        address,
+        zip,
+        contact,
+        phone,
+        email,
+        remarks,
+        vendorlevel
+    </sql>
+
+    <select id="listVendors" resultType="com.weweb.po.entity.PoVendor">
+        SELECT
+        <include refid="poVendorColumns"/>
+        FROM PO_VENDOR
+    </select>
+
+</mapper>

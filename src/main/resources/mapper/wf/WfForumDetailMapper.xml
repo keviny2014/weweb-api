@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace='com.weweb.wf.mapper.WfForumDetailDao'>
+    <select id='findList' resultType='com.weweb.wf.entity.WfForumDetail'>SELECT FORUMDETAILID, FORUMID, DESCRIPTION, PICTURE, VIDEO, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE FROM WF_FORUM_DETAIL</select>
+    <select id='get' resultType='com.weweb.wf.entity.WfForumDetail'>SELECT FORUMDETAILID, FORUMID, DESCRIPTION, PICTURE, VIDEO, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE FROM WF_FORUM_DETAIL WHERE FORUMDETAILID = #{forumdetailid} ORDER BY FORUMDETAILID</select>
+    <delete id='delete'>DELETE FROM WF_FORUM_DETAIL WHERE FORUMDETAILID = #{forumdetailid} </delete>
+    <insert id='insert'>INSERT INTO WF_FORUM_DETAIL( FORUMDETAILID, FORUMID, DESCRIPTION, PICTURE, VIDEO, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE )
+        VALUES (#{forumdetailid}, #{forumid}, #{description,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, #{video,jdbcType=VARCHAR}, #{createBy},SYSDATE, #{createBy},SYSDATE)
+      <selectKey resultType='Long' keyProperty='forumdetailid' keyColumn='forumdetailid' order='BEFORE'>select SEQ_WF_FORUM_DETAIL.nextval as forumdetailid from dual</selectKey>
+    </insert>
+    <update id='update'>UPDATE WF_FORUM_DETAIL SET FORUMID = #{forumid}, DESCRIPTION = #{description}, PICTURE = #{picture}, VIDEO = #{video}, UPDATE_BY = #{updateBy}, UPDATE_DATE = SYSDATE WHERE FORUMDETAILID = #{forumdetailid} </update>
+  </mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace='com.weweb.wf.mapper.WfForumTypeDao'>
+    <select id='findList' resultType='com.weweb.wf.entity.WfForumType'>SELECT FORUMTYPEID, OBJECTNAME, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE FROM WF_FORUM_TYPE</select>
+    <select id='get' resultType='com.weweb.wf.entity.WfForumType'>SELECT FORUMTYPEID, OBJECTNAME, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE FROM WF_FORUM_TYPE WHERE FORUMTYPEID = #{forumtypeid} ORDER BY FORUMTYPEID</select>
+    <delete id='delete'>DELETE FROM WF_FORUM_TYPE WHERE FORUMTYPEID = #{forumtypeid} </delete>
+    <insert id='insert'>INSERT INTO WF_FORUM_TYPE( FORUMTYPEID, OBJECTNAME, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE ) VALUES (#{forumtypeid}, #{objectname}, #{createBy.id}, #{createDate}, #{updateBy.id}, #{updateDate})
+      <selectKey resultType='Long' keyProperty='forumtypeid' keyColumn='forumtypeid' order='BEFORE'>select SEQ_WF_FORUM_TYPE.nextval as forumtypeid from dual</selectKey>
+    </insert>
+    <update id='update'>UPDATE WF_FORUM_TYPE SET OBJECTNAME = #{objectname}, UPDATE_BY = #{updateBy.id}, UPDATE_DATE = #{updateDate} WHERE FORUMTYPEID = #{forumtypeid} </update>
+  </mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace='com.weweb.wf.mapper.WfWorkflowParaDao'>
+    <select id='findList' resultType='com.weweb.wf.entity.WfWorkflowPara'>SELECT WORKFLOWINSTANCEID, VALUE, NAME FROM WF_WORKFLOW_PARA</select>
+    <select id='get' resultType='com.weweb.wf.entity.WfWorkflowPara'>SELECT WORKFLOWINSTANCEID, VALUE, NAME FROM WF_WORKFLOW_PARA WHERE WORKFLOWINSTANCEID = #{workflowinstanceid} ORDER BY WORKFLOWINSTANCEID</select>
+    <delete id='delete'>DELETE FROM WF_WORKFLOW_PARA WHERE WORKFLOWINSTANCEID = #{workflowinstanceid} </delete>
+    <insert id='insert'>INSERT INTO WF_WORKFLOW_PARA( WORKFLOWINSTANCEID, VALUE, NAME ) VALUES (#{workflowinstanceid}, #{value}, #{name})
+      <selectKey resultType='Long' keyProperty='workflowinstanceid' keyColumn='workflowinstanceid' order='BEFORE'>select SEQ_WF_WORKFLOW_PARA.nextval as workflowinstanceid from dual</selectKey>
+    </insert>
+    <update id='update'>UPDATE WF_WORKFLOW_PARA SET VALUE = #{value}, NAME = #{name} WHERE WORKFLOWINSTANCEID = #{workflowinstanceid} </update>
+  </mapper>

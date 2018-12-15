@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace='com.weweb.wf.mapper.WfTaskinstanceDao'>
+    <select id='findList' resultType='com.weweb.wf.entity.WfTaskinstance'>SELECT TASKINSTANCEID, TASKTYPEID, WORKFLOWINSTANCEID, NAME, DISPLAYNAME, STATE, TASK_TYPE, CREATED_TIME, STARTED_TIME, EXPIRED_TIME, END_TIME, ASSIGNMENT_STRATEGY, WORKFLOWINSTANCE_ID, WORKFLOW_ID, VERSION, ITEMS_ID FROM WF_TASKINSTANCE</select>
+    <select id='get' resultType='com.weweb.wf.entity.WfTaskinstance'>SELECT TASKINSTANCEID, TASKTYPEID, WORKFLOWINSTANCEID, NAME, DISPLAYNAME, STATE, TASK_TYPE, CREATED_TIME, STARTED_TIME, EXPIRED_TIME, END_TIME, ASSIGNMENT_STRATEGY, WORKFLOWINSTANCE_ID, WORKFLOW_ID, VERSION, ITEMS_ID FROM WF_TASKINSTANCE WHERE TASKINSTANCEID = #{taskinstanceid} ORDER BY TASKINSTANCEID</select>
+    <delete id='delete'>DELETE FROM WF_TASKINSTANCE WHERE TASKINSTANCEID = #{taskinstanceid} </delete>
+    <insert id='insert'>INSERT INTO WF_TASKINSTANCE( TASKINSTANCEID, TASKTYPEID, WORKFLOWINSTANCEID, NAME, DISPLAYNAME, STATE, TASK_TYPE, CREATED_TIME, STARTED_TIME, EXPIRED_TIME, END_TIME, ASSIGNMENT_STRATEGY, WORKFLOWINSTANCE_ID, WORKFLOW_ID, VERSION, ITEMS_ID ) VALUES (#{taskinstanceid,jdbcType=NUMERIC}, #{tasktypeid,jdbcType=NUMERIC}, #{workflowinstanceid,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR}, #{displayname,jdbcType=VARCHAR}, #{state,jdbcType=NUMERIC}, #{taskType,jdbcType=VARCHAR}, SYSDATE, #{startedTime,jdbcType=DATE}, #{expiredTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, #{assignmentStrategy,jdbcType=VARCHAR}, #{workflowinstanceId,jdbcType=NUMERIC}, #{workflowId,jdbcType=NUMERIC}, #{version,jdbcType=VARCHAR}, #{itemsId,jdbcType=NUMERIC})
+      <selectKey resultType='Long' keyProperty='taskinstanceid' keyColumn='taskinstanceid' order='BEFORE'>select SEQ_WF_TASKINSTANCE.nextval as taskinstanceid from dual</selectKey>
+    </insert>
+    <update id='update'>UPDATE WF_TASKINSTANCE SET TASKTYPEID = #{tasktypeid}, WORKFLOWINSTANCEID = #{workflowinstanceid}, NAME = #{name}, DISPLAYNAME = #{displayname}, STATE = #{state}, TASK_TYPE = #{taskType}, CREATED_TIME = #{createdTime}, STARTED_TIME = #{startedTime}, EXPIRED_TIME = #{expiredTime}, END_TIME = #{endTime}, ASSIGNMENT_STRATEGY = #{assignmentStrategy}, WORKFLOWINSTANCE_ID = #{workflowinstanceId}, WORKFLOW_ID = #{workflowId}, VERSION = #{version}, ITEMS_ID = #{itemsId} WHERE TASKINSTANCEID = #{taskinstanceid} </update>
+
+    <select id='getWorkflowInstanceByVersion'  resultType='com.weweb.wf.entity.WfWorkflowinstance'>SELECT WORKFLOWINSTANCEID, WORKFLOWID, VERSION, NAME, DISPLAY_NAME, STATE, CREATED_TIME, STARTED_TIME, EXPIRED_TIME, END_TIME, PARENT_WORKFLOWINSTANCE_ID, PARENT_TASKINSTANCE_ID FROM WF_WORKFLOWINSTANCE WHERE VERSION = #{version} AND WORKFLOWID=#{workflowId}</select>
+    <select id='getTaskInstanceByWorkflow'  resultType='com.weweb.wf.entity.WfTaskinstance'>SELECT TASKINSTANCEID, TASKTYPEID, WORKFLOWINSTANCEID, NAME, DISPLAYNAME, STATE, TASK_TYPE, CREATED_TIME, STARTED_TIME, EXPIRED_TIME, END_TIME, ASSIGNMENT_STRATEGY, WORKFLOWINSTANCE_ID, WORKFLOW_ID, VERSION, ITEMS_ID FROM WF_TASKINSTANCE WHERE WORKFLOWINSTANCEID = #{workflowInstanceId} AND TASKTYPEID= #{taskTypeId} AND ITEMS_ID= #{itemsId} ORDER BY TASKINSTANCEID</select>
+
+    <select id='getWorkItemByTask'  resultType='com.weweb.wf.entity.WfWorkitem'>SELECT WORKITEMID, TASKINSTANCEID, STATE, CREATED_TIME, SIGNED_TIME, END_TIME, ACTOR_ID, COMMENTS FROM WF_WORKITEM WHERE TASKINSTANCEID = #{taskInstanceId}  AND  ACTOR_ID = #{actorId}</select>
+
+    <select id='findWorkflowTaskListById' resultType='com.weweb.wf.entity.WfTaskinstance'>SELECT TASKINSTANCEID, TASKTYPEID, WORKFLOWINSTANCEID, NAME, DISPLAYNAME, STATE, TASK_TYPE, CREATED_TIME, STARTED_TIME, EXPIRED_TIME, END_TIME, ASSIGNMENT_STRATEGY, WORKFLOWINSTANCE_ID, WORKFLOW_ID, VERSION, ITEMS_ID FROM WF_TASKINSTANCE WHERE WORKFLOWINSTANCEID = #{workflowinstanceid}</select>
+    <select id='findWorkflowWorkItemListById'  resultType='com.weweb.wf.entity.WfWorkitem'>SELECT w.WORKITEMID, w.TASKINSTANCEID, w.STATE, w.CREATED_TIME, w.SIGNED_TIME, w.END_TIME, w.ACTOR_ID, w.COMMENTS FROM WF_WORKITEM w, WF_TASKINSTANCE t  WHERE t.TASKINSTANCEID=w.TASKINSTANCEID AND  t.WORKFLOWINSTANCEID = #{workflowinstanceid}  </select>
+
+  <select id='countWorkflowTaskList' resultType='java.lang.Long'>
+    SELECT count(*) FROM WF_TASKINSTANCE t,WF_WORKITEM w, PO_ORDERREQUEST p WHERE t.TASKINSTANCEID=w.TASKINSTANCEID AND
+    t.ASSIGNMENT_STRATEGY='Role:UPIS' AND p.ORDERREQUESTID = t.ITEMS_ID AND p.STATUS &lt; 5
+    <if test="userId!=null and userId!=''">
+      AND w.ACTOR_ID = #{userId}
+    </if>
+    <choose>
+      <when test="status!=null and status==5">
+        AND w.STATE &lt;= 5
+      </when>
+      <when test="status!=null and status>5">
+        AND w.STATE &gt; 5
+      </when>
+    </choose>
+  </select>
+
+    <select id='findWorkflowTaskList' resultType='com.weweb.wf.entity.WfTaskinstance'>
+      SELECT * FROM
+      (
+      SELECT A.*, ROWNUM RN
+      FROM (
+
+
+      SELECT t.TASKINSTANCEID, t.TASKTYPEID, t.WORKFLOWINSTANCEID, t.NAME, t.DISPLAYNAME, t.STATE, t.TASK_TYPE,
+      t.CREATED_TIME ,
+      t.STARTED_TIME, t.EXPIRED_TIME, t.END_TIME, t.ASSIGNMENT_STRATEGY, t.WORKFLOWINSTANCE_ID, t.WORKFLOW_ID
+      workflowId,
+      t.VERSION, t.ITEMS_ID FROM WF_TASKINSTANCE t,WF_WORKITEM w, PO_ORDERREQUEST p WHERE t.TASKINSTANCEID=w.TASKINSTANCEID AND
+      t.ASSIGNMENT_STRATEGY='Role:UPIS' AND p.ORDERREQUESTID = t.ITEMS_ID AND p.STATUS &lt; 5
+      <if test="userId!=null and userId!=''">
+        AND w.ACTOR_ID = #{userId}
+      </if>
+      <choose>
+        <when test="status!=null and status==5">
+          AND w.STATE &lt;= 5
+        </when>
+        <when test="status!=null and status>5">
+          AND w.STATE &gt; 5
+        </when>
+      </choose>
+      ORDER BY T.TASKINSTANCEID DESC
+
+
+      ) A
+      WHERE ROWNUM &lt; #{fetch}
+      )
+      WHERE RN &gt;= #{start}
+    </select>
+
+<!--
+  <select id='findWorkflowTaskList' resultType='com.wewebeb.wf.entity.WfTaskinstance'>
+    SELECT t.TASKINSTANCEID, t.TASKTYPEID, t.WORKFLOWINSTANCEID, t.NAME, t.DISPLAYNAME, t.STATE, t.TASK_TYPE, t.CREATED_TIME ,
+    t.STARTED_TIME, t.EXPIRED_TIME, t.END_TIME, t.ASSIGNMENT_STRATEGY, t.WORKFLOWINSTANCE_ID, t.WORKFLOW_ID workflowId,
+    t.VERSION, t.ITEMS_ID FROM WF_TASKINSTANCE t,WF_WORKITEM w WHERE t.TASKINSTANCEID=w.TASKINSTANCEID and t.ASSIGNMENT_STRATEGY='Role:UPIS'
+    <if test="userId!=null and userId!=''">
+      AND w.ACTOR_ID = #{userId}
+    </if>
+    <choose>
+      <when test="status!=null and status==5">
+        AND w.STATE &lt;= #{status}
+      </when>
+      <when test="status!=null and status>5">
+        AND w.STATE &gt; #{status}
+      </when>
+    </choose>
+    ORDER BY w.ACTOR_ID
+  </select>-->
+
+    <select id='findWorkflowWorkItemListByTaskInstanceId'  resultType='com.weweb.wf.entity.WfWorkitem'>SELECT WORKITEMID, TASKINSTANCEID, STATE, CREATED_TIME, SIGNED_TIME, END_TIME, ACTOR_ID, COMMENTS FROM WF_WORKITEM  WHERE   TASKINSTANCEID = #{taskinstanceid}  </select>
+
+    <select id='findWorkItemByRecordId'  resultType='com.weweb.wf.entity.WfWorkitem'>SELECT w.WORKITEMID, w.TASKINSTANCEID, w.STATE, w.CREATED_TIME, w.SIGNED_TIME, w.END_TIME, w.ACTOR_ID, w.COMMENTS FROM WF_WORKITEM w, WF_TASKINSTANCE t  WHERE t.TASKINSTANCEID=w.TASKINSTANCEID AND  t.ITEMS_ID = #{recordId} ORDER BY  w.CREATED_TIME DESC</select>
+
+</mapper>

@@ -1,0 +1,22 @@
+
+spring:
+  datasource:
+    name: test
+    jdbcUrl: jdbc:mysql://111.230.95.22:3306/mytest?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: root
+    password: Shen123...
+    driver-class-name: com.mysql.jdbc.Driver
+    maxConnectionsPerPartition: 15
+    minConnectionsPerPartition : 5
+    partitionCount : 3
+    acquireIncrement : 5
+    statementsCacheSize : 100
+server:
+  port: 4001
+
+  #upload file
+constants:
+    imageServerPath: http://webdev05.sstparts.com/
+    uploadItemForumImagePath: /media/userfiles/po/itemforums/
+    showItemForumImagePath: /po/itemforums/
+    #itemForumImagePath: D://media/userfiles/po/itemforums/

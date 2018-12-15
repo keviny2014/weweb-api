@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace='com.weweb.wf.mapper.WfWorkflowinstanceDao'>
+    <select id='findList' resultType='com.weweb.wf.entity.WfWorkflowinstance'>SELECT WORKFLOWINSTANCEID, WORKFLOWID, VERSION, NAME, DISPLAY_NAME, STATE, CREATED_TIME, STARTED_TIME, EXPIRED_TIME, END_TIME, PARENT_WORKFLOWINSTANCE_ID, PARENT_TASKINSTANCE_ID FROM WF_WORKFLOWINSTANCE</select>
+    <select id='get' resultType='com.weweb.wf.entity.WfWorkflowinstance'>SELECT WORKFLOWINSTANCEID, WORKFLOWID, VERSION, NAME, DISPLAY_NAME, STATE, CREATED_TIME, STARTED_TIME, EXPIRED_TIME, END_TIME, PARENT_WORKFLOWINSTANCE_ID, PARENT_TASKINSTANCE_ID FROM WF_WORKFLOWINSTANCE WHERE WORKFLOWINSTANCEID = #{workflowinstanceid} ORDER BY WORKFLOWINSTANCEID</select>
+    <delete id='delete'>DELETE FROM WF_WORKFLOWINSTANCE WHERE WORKFLOWINSTANCEID = #{workflowinstanceid} </delete>
+    <insert id='insert'>INSERT INTO WF_WORKFLOWINSTANCE( WORKFLOWINSTANCEID, WORKFLOWID, VERSION, NAME, DISPLAY_NAME, STATE, CREATED_TIME, STARTED_TIME, EXPIRED_TIME, END_TIME, PARENT_WORKFLOWINSTANCE_ID, PARENT_TASKINSTANCE_ID ) VALUES (#{workflowinstanceid,jdbcType=NUMERIC}, #{workflowid,jdbcType=NUMERIC}, #{version,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{displayName,jdbcType=VARCHAR}, #{state,jdbcType=NUMERIC}, SYSDATE, SYSDATE, #{expiredTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, #{parentWorkflowinstanceId,jdbcType=NUMERIC}, #{parentTaskinstanceId,jdbcType=NUMERIC})
+      <selectKey resultType='Long' keyProperty='workflowinstanceid' keyColumn='workflowinstanceid' order='BEFORE'>select SEQ_WF_WORKFLOWINSTANCE.nextval as workflowinstanceid from dual</selectKey>
+    </insert>
+    <update id='update'>UPDATE WF_WORKFLOWINSTANCE SET WORKFLOWID = #{workflowid}, VERSION = #{version}, NAME = #{name}, DISPLAY_NAME = #{displayName}, STATE = #{state}, CREATED_TIME = #{createdTime}, STARTED_TIME = #{startedTime}, EXPIRED_TIME = #{expiredTime}, END_TIME = #{endTime}, PARENT_WORKFLOWINSTANCE_ID = #{parentWorkflowinstanceId}, PARENT_TASKINSTANCE_ID = #{parentTaskinstanceId} WHERE WORKFLOWINSTANCEID = #{workflowinstanceid} </update>
+  </mapper>

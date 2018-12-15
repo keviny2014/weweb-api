@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='com.weweb.po.mapper.PoOrderRequestDao'>
+    <sql id="orderRequestColumn">
+        POR.ORDERREQUESTID,  POR.PRODUCTID,
+        POR.PRODUCTTITLE, POR.CREATEDBYDEVICEID,POR.DEVICENAME DEVICENAME,POR.ISVIRTUAL,POR.ATTRIBUTE,
+        POR.SKU, POR.UNIT, POR.QBNAME, POR.QTY, POR.SUGGESTPRICE, POR.PRICE, POR.PRIORITY, POR.REMARKS, POR.PICTURE,
+       POR.STATUS, POR.THUMBNAIL, POR.DETAIL, POR.CREATE_BY, POR.CREATE_DATE, POR.UPDATE_BY, POR.UPDATE_DATE,
+        POR.BATCHCODE, POR.REQUESTTYPE,POR.PRICERMB,POR.QUALITY,POR.TROUBLESHOOTING,POR.INIT_PRICE initPrice,
+        POR.INIT_QTY initQty,POR.isTested
+
+    </sql>
+    <select id="getOrderRequest" resultType="com.weweb.po.entity.PoOrderRequest">
+        SELECT
+        <include refid="orderRequestColumn"/>
+        FROM PO_ORDERREQUEST POR
+        WHERE POR.ORDERREQUESTID = #{orderRequestId}
+    </select>
+    <update id='update'>
+        UPDATE PO_ORDERREQUEST SET
+        <if test="productId != null">
+            PRODUCTID = #{productId},
+        </if>
+        <if test="productTitle != null">
+            PRODUCTTITLE = #{productTitle},
+        </if>
+        <if test="createdByDeviceId != null">
+            CREATEDBYDEVICEID = #{createdByDeviceId},
+        </if>
+        <if test="deviceName != null">
+            DEVICENAME=#{deviceName},
+        </if>
+        <if test="attribute != null">
+            ATTRIBUTE=#{attribute},
+        </if>
+        <if test="isVirtual != null">
+            ISVIRTUAL = #{isVirtual},
+        </if>
+        <if test="sku != null">
+            SKU = #{sku},
+        </if>
+        <if test="unit != null">
+            UNIT = #{unit},
+        </if>
+        <if test="qbName != null">
+            QBNAME = #{qbName},
+        </if>
+        <if test="qty != null">
+            QTY = #{qty},
+        </if>
+        <if test="suggestPrice != null">
+            SUGGESTPRICE = #{suggestPrice},
+        </if>
+        <if test="price != null">
+            PRICE = #{price},
+        </if>
+        <if test="priority != null">
+            PRIORITY = #{priority},
+        </if>
+        <if test="remarks != null">
+            REMARKS = #{remarks},
+        </if>
+        <if test="picture != null">
+            PICTURE = #{picture},
+        </if>
+        <if test="status != null">
+            STATUS = #{status},
+        </if>
+        <if test="thumbnail != null">
+            THUMBNAIL = #{thumbnail},
+        </if>
+        <if test="detail != null">
+            DETAIL = #{detail},
+        </if>
+        <if test="batchCode != null">
+            BATCHCODE = #{batchCode},
+        </if>
+        <if test="requestType != null">
+            REQUESTTYPE = #{requestType},
+        </if>
+        <if test="priceRmb != null">
+            PRICERMB = #{priceRmb},
+        </if>
+        <if test="quality!=null ">
+            QUALITY=#{quality},
+        </if>
+        <if test="isTested!=null ">
+            ISTESTED=#{isTested},
+        </if>
+        <if test="troubleShooting!=null">
+            TROUBLESHOOTING=#{troubleShooting},
+        </if>
+        UPDATE_BY = #{updateBy},
+        UPDATE_DATE = SYSDATE
+        WHERE ORDERREQUESTID = #{orderRequestId}
+    </update>
+
+</mapper>

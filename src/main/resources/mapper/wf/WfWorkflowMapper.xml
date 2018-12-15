@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace='com.weweb.wf.mapper.WfWorkflowDao'>
+    <select id='findList' resultType='com.weweb.wf.entity.WfWorkflow'>SELECT WORKFLOWID, NAME, DISPLAY_NAME, DESCRIPTION, VERSION, PROCESS_CONTENT, PUBLISHED, PUBLISHER, PUBLISH_TIME FROM WF_WORKFLOW</select>
+    <select id='get' resultType='com.weweb.wf.entity.WfWorkflow'>SELECT WORKFLOWID, NAME, DISPLAY_NAME, DESCRIPTION, VERSION, PROCESS_CONTENT, PUBLISHED, PUBLISHER, PUBLISH_TIME FROM WF_WORKFLOW WHERE WORKFLOWID = #{workflowid} ORDER BY WORKFLOWID</select>
+    <delete id='delete'>DELETE FROM WF_WORKFLOW WHERE WORKFLOWID = #{workflowid} </delete>
+    <insert id='insert'>INSERT INTO WF_WORKFLOW( WORKFLOWID, NAME, DISPLAY_NAME, DESCRIPTION, VERSION, PROCESS_CONTENT, PUBLISHED, PUBLISHER, PUBLISH_TIME ) VALUES (#{workflowid}, #{name}, #{displayName}, #{description}, #{version}, #{processContent}, #{published}, #{publisher}, #{publishTime})
+      <selectKey resultType='Long' keyProperty='workflowid' keyColumn='workflowid' order='BEFORE'>select SEQ_WF_WORKFLOW.nextval as workflowid from dual</selectKey>
+    </insert>
+    <update id='update'>UPDATE WF_WORKFLOW SET NAME = #{name}, DISPLAY_NAME = #{displayName}, DESCRIPTION = #{description}, VERSION = #{version}, PROCESS_CONTENT = #{processContent}, PUBLISHED = #{published}, PUBLISHER = #{publisher}, PUBLISH_TIME = #{publishTime} WHERE WORKFLOWID = #{workflowid} </update>
+    <select id='getByName' resultType='com.weweb.wf.entity.WfWorkflow'>SELECT WORKFLOWID, NAME, DISPLAY_NAME, DESCRIPTION, VERSION, PROCESS_CONTENT, PUBLISHED, PUBLISHER, PUBLISH_TIME FROM WF_WORKFLOW WHERE NAME = #{name} </select>
+
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weweb.sys.mapper.SysUserTokenDao">
+    <insert id="save" parameterType="com.weweb.sys.entity.SysUserToken">
+        <selectKey resultType="Long" keyProperty="tokenId" keyColumn="tokenId" order="BEFORE">
+            select SEQ_SYSUSERTOKEN.nextval as tokenId from dual
+        </selectKey>
+        INSERT INTO SYSUSERTOKEN(TOKENID,USERID,TOKEN,TOKENIP,CREATETIME,UPDATETIME,TYPE,ISONLINE,SERIES,USERROLENAME,USERNAME)
+        VALUES(#{tokenId},#{userId},#{token},#{tokenIp},sysdate,sysdate,#{type},#{isOnLine},#{series,jdbcType=VARCHAR},#{userRoleName},#{userName})
+    </insert>
+    <update id='update'>UPDATE SYSUSERTOKEN
+        SET
+        <if test="userId != null">
+            USERID = #{userId},
+        </if>
+        <if test="token != null">
+            TOKEN = #{token},
+        </if>
+        <if test="tokenIp != null">
+            TOKENIP = #{tokenIp},
+        </if>
+        <if test="isOnLine != null">
+            ISONLINE = #{isOnLine},
+        </if>
+        <if test="series != null">
+            SERIES = #{series},
+        </if>
+        <if test="type != null">
+            TYPE = #{type},
+        </if>
+        <if test="userRoleName!=null">
+            USERROLENAME=#{userRoleName},
+        </if>
+        <if test="userName!=null">
+            USERNAME=#{userName},
+        </if>
+        UPDATETIME=SYSDATE
+        WHERE TOKENID = #{tokenId}
+    </update>
+    <update id='logout'>UPDATE SYSUSERTOKEN
+        SET
+        TOKEN =#{token} ,ISONLINE=0, UPDATETIME=SYSDATE
+        WHERE TOKENID = #{tokenId}
+    </update>
+    <select id="getSysUserTokenByUserId" resultType="com.weweb.sys.entity.SysUserToken">
+        SELECT SYSUSERTOKEN.*  FROM SYSUSERTOKEN WHERE USERID=#{userId}
+    </select>
+    <select id="getSysUserTokenByToken" resultType="com.weweb.sys.entity.SysUserToken">
+        SELECT SYSUSERTOKEN.*  FROM SYSUSERTOKEN WHERE TOKEN=#{token}
+    </select>
+</mapper>

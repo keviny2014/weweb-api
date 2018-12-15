@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace='com.weweb.wf.mapper.WfWorkitemDao'>
+    <select id='findList' resultType='com.weweb.wf.entity.WfWorkitem'>SELECT WORKITEMID, TASKINSTANCEID, STATE, CREATED_TIME, SIGNED_TIME, END_TIME, ACTOR_ID, COMMENTS FROM WF_WORKITEM</select>
+    <select id='get' resultType='com.weweb.wf.entity.WfWorkitem'>SELECT WORKITEMID, TASKINSTANCEID, STATE, CREATED_TIME, SIGNED_TIME, END_TIME, ACTOR_ID, COMMENTS FROM WF_WORKITEM WHERE WORKITEMID = #{workitemid} ORDER BY WORKITEMID</select>
+    <delete id='delete'>DELETE FROM WF_WORKITEM WHERE WORKITEMID = #{workitemid} </delete>
+    <insert id='insert'>INSERT INTO WF_WORKITEM( WORKITEMID, TASKINSTANCEID, STATE, CREATED_TIME, SIGNED_TIME, END_TIME, ACTOR_ID, COMMENTS ) VALUES (#{workitemid,jdbcType=NUMERIC}, #{taskinstanceid,jdbcType=NUMERIC}, #{state,jdbcType=NUMERIC}, SYSDATE, #{signedTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, #{actorId,jdbcType=NUMERIC}, #{comments,jdbcType=VARCHAR})
+      <selectKey resultType='Long' keyProperty='workitemid' keyColumn='workitemid' order='BEFORE'>select SEQ_WF_WORKITEM.nextval as workitemid from dual</selectKey>
+    </insert>
+    <update id='update'>UPDATE WF_WORKITEM SET TASKINSTANCEID = #{taskinstanceid,jdbcType=NUMERIC}, STATE = #{state,jdbcType=NUMERIC}, CREATED_TIME = #{createdTime,jdbcType=DATE}, SIGNED_TIME = #{signedTime,jdbcType=DATE}, END_TIME = #{endTime,jdbcType=DATE}, ACTOR_ID = #{actorId,jdbcType=NUMERIC}, COMMENTS = #{comments,jdbcType=VARCHAR} WHERE WORKITEMID = #{workitemid,jdbcType=NUMERIC} </update>
+  </mapper>

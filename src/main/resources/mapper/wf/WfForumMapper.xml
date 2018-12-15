@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace='com.weweb.wf.mapper.WfForumDao'>
+    <select id='findList' resultType='com.weweb.wf.entity.WfForum'>SELECT FORUMID, FORUMTYPEID, TITLE, RECORDID, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE FROM WF_FORUM</select>
+    <select id='get' resultType='com.weweb.wf.entity.WfForum'>SELECT FORUMID, FORUMTYPEID, TITLE, RECORDID, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE FROM WF_FORUM WHERE FORUMID = #{forumid} ORDER BY FORUMID</select>
+    <delete id='delete'>DELETE FROM WF_FORUM WHERE FORUMID = #{forumid} </delete>
+    <insert id='insert'>INSERT INTO WF_FORUM( FORUMID, FORUMTYPEID, TITLE, RECORDID, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE )
+      VALUES (#{forumid}, #{forumtypeid}, #{title,jdbcType=VARCHAR}, #{recordid}, #{createBy},SYSDATE, #{createBy}, SYSDATE)
+      <selectKey resultType='Long' keyProperty='forumid' keyColumn='forumid' order='BEFORE'>select SEQ_WF_FORUM.nextval as forumid from dual</selectKey>
+    </insert>
+    <update id='update'>UPDATE WF_FORUM SET FORUMTYPEID = #{forumtypeid}, TITLE = #{title}, RECORDID = #{recordid}, UPDATE_BY = #{updateBy}, UPDATE_DATE =SYSDATE WHERE FORUMID = #{forumid} </update>
+
+    <select id='findListByRecordId' resultType='com.weweb.wf.entity.WfForum'>SELECT FORUMID, FORUMTYPEID, TITLE, RECORDID, CREATE_BY createBy, CREATE_DATE createDate, UPDATE_BY, UPDATE_DATE FROM WF_FORUM WHERE FORUMTYPEID = #{forumtypeid} AND RECORDID=#{recordid} ORDER BY FORUMID</select>
+    <select id='findForumDetail' resultType='com.weweb.wf.entity.WfForumDetail'>
+        SELECT FORUMDETAILID, FORUMID, DESCRIPTION, nvl2(PICTURE,#{imagePath} || PICTURE, null) picture,
+        VIDEO, wf.CREATE_DATE createDate, wf.UPDATE_BY updateBy, wf.UPDATE_DATE updateDate,
+        SYS_USER.NAME createBy  FROM WF_FORUM_DETAIL wf LEFT JOIN SYS_USER ON SYS_USER.ID=wf.CREATE_BY
+         WHERE FORUMID = #{wfForum.forumid} ORDER BY FORUMDETAILID
+  </select>
+    <select id='findAllForumType' resultType='com.weweb.wf.entity.WfForumType'>SELECT FORUMTYPEID, OBJECTNAME, CREATE_BY createBy, CREATE_DATE createDate, UPDATE_BY updateBy, UPDATE_DATE updateDate FROM WF_FORUM_TYPE</select>
+    <select id='findAllForum' resultType='com.weweb.wf.entity.WfForum'>SELECT FORUMID, FORUMTYPEID, TITLE, RECORDID, CREATE_BY createBy, CREATE_DATE createDate, UPDATE_BY updateBy, UPDATE_DATE updateDate FROM WF_FORUM</select>
+
+</mapper>
